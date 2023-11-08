@@ -88,6 +88,11 @@ def handle_callback(call):
 '''
 @bot.message_handler(commands=['start'])
 def handle_start(message):
+    global day, grade, grade_set, day_set
+    grade = '-'
+    day = '-'
+    grade_set = False
+    day_set = False    
     bot.send_message(message.chat.id, 'Welcome to my bot!')
     bot.send_message(message.chat.id, 'Here are some helpful commands:')
     bot.send_message(message.chat.id, '/start - Start the bot')
