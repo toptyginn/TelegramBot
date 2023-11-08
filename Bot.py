@@ -12,7 +12,14 @@ def if_set(data, if_data, value):
 # Инициализация бота:
 # Создание бота
 bot = telebot.TeleBot('6802450385:AAF9ytn2osGDhEQUKIqp4R3bTDjPuSr7HaM')
-grade = ''
+
+# Глобальные переменные
+
+grade = '-'
+day = '-'
+grade_set = False
+day_set = False
+
 
 # Запрос
 
@@ -82,46 +89,70 @@ def handle_callback(call):
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     bot.send_message(message.chat.id, 'Welcome to my bot!')
+    bot.send_message(message.chat.id, 'Here are some helpful commands:')
+    bot.send_message(message.chat.id, '/start - Start the bot')
+    bot.send_message(message.chat.id, '/help - Show this help message')
+    bot.send_message(message.chat.id, '/timesheet - Show your timesheet')
 
 @bot.message_handler(commands=['help'])
 def handle_help(message):
     bot.send_message(message.chat.id, 'Here are some helpful commands:')
     bot.send_message(message.chat.id, '/start - Start the bot')
     bot.send_message(message.chat.id, '/help - Show this help message')
+    bot.send_message(message.chat.id, '/timesheet - Show your timesheet')
+
 @bot.message_handler(commands=['timesheet'])
 def timesheet(message):
     bot.send_message(message.chat.id, 'Выберите свой класс', reply_markup=keyboard_grade)
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(call):
-    global day, grade
-    if call.data == '7':
-        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
-        grade = grade + call.data
-    elif call.data == '8':
-        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-        grade = grade + call.data
-    elif call.data == '9':
-        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-        grade = grade + call.data
-    elif call.data == '10':
-        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-        grade = grade + call.data
-    elif call.data == '11':
-        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
-        grade = grade + call.data
-    print(grade)
-    if len(grade) >= 2:
-        bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
-        day = if_set(call.data, 'Вчера', time.localtime(time.time()).tm_mday - 1)
-        day = if_set(call.data, 'Сегодня', time.localtime(time.time()).tm_mday)
-        day = if_set(call.data, 'Вчера', time.localtime(time.time()).tm_mday + 1)
-        day = if_set(call.data, 'other', call.data)
-        if day == 'other':
-            bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
-        if call.data in range(6):
-            day = call.data
-
-    print(call.data)
+    global day, grade, grade_set, day_set
+    if (grade_set):
+        bot.send_message(call.message.chat.id, f'Выбран класс: {grade}')
+    if (day_set):
+        bot.send_message(call.message.chat.id, f'Выбран день: {day}')
+    if not grade_set:
+        if (grade=='-'):
+            match  call.data:
+                case '7':
+                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
+                    grade = call.data
+                case '8':
+                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                    grade = call.data
+                case '9':
+                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                    grade = call.data
+                case '10':
+                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                    grade = call.data
+                case '11':
+                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
+                    grade = call.data
+                case _:
+                    bot.send_message(call.message.chat.id, 'Неверный выбор')
+        else:
+            grade += call.data
+            grade_set = True
+            bot.send_message(call.message.chat.id, f'Выбран класс: {grade}')
+            bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
+    elif not day_set:
+        match  call.data:
+            case 'Вчера':        
+                day = time.localtime(time.time()).tm_mday - 1
+                day_set = True
+            case 'Сегодня':        
+                day = time.localtime(time.time()).tm_mday 
+                day_set = True
+            case 'Завра':        
+                day = time.localtime(time.time()).tm_mday + 1
+                day_set = True
+            case 'other':        
+                bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
+            case _:
+                day = call.data
+                day_set = True
+                bot.send_message(call.message.chat.id, f'Выбран день: {day}')
 
 bot.polling(none_stop=True)
