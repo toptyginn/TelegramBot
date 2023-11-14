@@ -72,7 +72,7 @@ keyboard_days.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    users[str(message.chat.id)] = User()
+    users[str(message.from_user.id)] = User()
 
     bot.send_message(message.chat.id, 'Welcome to my bot!')
     bot.send_message(message.chat.id, 'Here are some helpful commands:')
