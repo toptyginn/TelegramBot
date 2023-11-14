@@ -71,6 +71,9 @@ make_timesheet()
 tablee = cur.execute(timesheet)
 
 result0 = cur.execute("""SELECT * FROM timesheet""").fetchall()
+result1 = cur.execute('''SELECT * FROM classes''').fetchall()
 print(result0)
+print(result1)
+print(Help.timesheet)
 
 
