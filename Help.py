@@ -14,24 +14,37 @@ translate = {"Кл час": 'Классный час', 'АЛГ': 'Алгебра
              'ИСТэ': 'Электив по истории', 'ТЕХ': 'Технология', 'АНГяз-1': 'Английский язык (1 группа)',
              'ИНФэ': 'Электив по информатике', 'ФИЗ-1ч': 'Физика', 'ФИЗ-2ч': 'Физика',
              'ОБЩэ': 'Электив по обществознанию', 'УПП': 'Проектная деятельность', 'Псих.': 'Психология',
-             'МАТ': 'Математика', 'АнгЯз-2': 'Английский язык (2 группа)'}
-# печааем заголовок
-print(f'{ws.cell(1,1).value}\t{ws.cell(1,2).value}\t{ws.cell(1,3).value}')
-timesheet = []
-day = []
-# осальные сроки
+             'МАТ': 'Математика', 'АнгЯз-2': 'Английский язык (2 группа)', 'Пусто': 'Пусто'}
 
-for column in range(2, ws.max_column):
-    for row in range(2, ws.max_row):
-        if len(day) == 9:
-            timesheet.append(day)
-            day = []
+days_of_week = ['Понедельник', "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+timesheet = {}
+day = {}
+lesson = {}
+# осальные сроки
+count = 0
+for column in range(4, ws.max_column, 2):
+    for row in range(7, 70):
+        if row in range(34, 37):
+            continue
         try:
-            if ws.cell(row, column).value is None and len(day) > 0:
-                day.append('Пусто')
+            count += 1
+            if count == 9:
+                day[days_of_week[len(day.keys())]] = lesson
+                count = 0
+                lesson = {}
             else:
-                day.append(translate[ws.cell(row, column).value])
+                lesson[str(count)] = []
+                if ws.cell(row, column).value is None and len(lesson.keys()) > 0:
+                    lesson[str(count)].append('Пусто')
+                else:
+                    lesson[str(count)].append(translate[ws.cell(row, column).value])
+                    lesson[str(count)].append(ws.cell(row, column + 1).value)
         except Exception:
             continue
+    timesheet[ws.cell(6, column).value] = day
+    day = {}
+    count = 0
 
+for i in timesheet.keys():
+    print(f'{i}: {timesheet[i]}', end='\n')
 
