@@ -63,12 +63,12 @@ keyboard_now.add(InlineKeyboardButton('Другой день', callback_data='ot
 keyboard_now.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 # Дни недели
-keyboard_days.add(InlineKeyboardButton('Понедельник', callback_data='0'))
-keyboard_days.add(InlineKeyboardButton('Вторник', callback_data='1'))
-keyboard_days.add(InlineKeyboardButton('Среда', callback_data='2'))
-keyboard_days.add(InlineKeyboardButton('Четверг', callback_data='3'))
-keyboard_days.add(InlineKeyboardButton('Пятница', callback_data='4'))
-keyboard_days.add(InlineKeyboardButton('Суббота', callback_data='5'))
+keyboard_days.add(InlineKeyboardButton('Понедельник', callback_data='Понедельник'))
+keyboard_days.add(InlineKeyboardButton('Вторник', callback_data='Вторник'))
+keyboard_days.add(InlineKeyboardButton('Среда', callback_data='Среда'))
+keyboard_days.add(InlineKeyboardButton('Четверг', callback_data='Четверг'))
+keyboard_days.add(InlineKeyboardButton('Пятница', callback_data='Пятница'))
+keyboard_days.add(InlineKeyboardButton('Суббота', callback_data='Суббота'))
 keyboard_days.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 # Функционал бота
@@ -158,9 +158,12 @@ def answer(call):
 
             for i in Help.timesheet[users[id].grade][users[id].day].keys():
                 try:
-                    answer.append(f'{i}: {Help.timesheet[users[id].grade][users[id].day][i][0]} {Help.timesheet[users[id].grade][users[id].day][i][-1]}')
+                    if len(Help.timesheet[users[id].grade][users[id].day][i]) > 0:
+                        answer.append(f'{i}: {Help.timesheet[users[id].grade][users[id].day][i][0]} {Help.timesheet[users[id].grade][users[id].day][i][-1]}')
+                    else:
+                        answer.append(f'{i}: Пусто')
                 except IndexError:
-                    answer.append(f'{i}: Пусто Пусто')
+                    answer.append(f'{i}: Пусто')
 
             answer = '\n'.join(answer)
             bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: {answer}')
