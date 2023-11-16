@@ -100,54 +100,57 @@ def timesheet(message):
 def answer(call):
     global id, users
     id = str(call.message.from_user.id)
-    if users[id].grade_set:
-        bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
-    if users[id].day_set:
-        bot.send_message(call.message.from_user.id, f'Выбран день: {users[id].day}')
-    if not users[id].grade_set:
-        if users[id].grade == '-':
-            match  call.data:
-                case '7':
-                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
-                    users[id].grade = call.data
-                case '8':
-                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-                    users[id].grade = call.data
-                case '9':
-                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-                    users[id].grade = call.data
-                case '10':
-                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-                    users[id].grade = call.data
-                case '11':
-                    bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
-                    users[id].grade = call.data
-                case _:
-                    bot.send_message(call.message.chat.id, 'Неверный выбор')
-        else:
-            users[id].grade += call.data
-            users[id].grade_set = True
+    if id in users.keys():
+        if users[id].grade_set:
             bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
-            bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
-    elif not users[id].day_set:
-        match  call.data:
-            case 'Вчера':
-                users[id].day = time.localtime(time.time()).tm_wday - 1
-                users[id].day_set = True
-            case 'Сегодня':
-                users[id].day = time.localtime(time.time()).tm_wday
-                users[id].day_set = True
-            case 'Завра':
-                users[id].day = time.localtime(time.time()).tm_wday + 1
-                users[id].day_set = True
-            case 'other':
-                bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
-            case 'return':
-                users[id].grade_set = False
-                users[id].grade = '-'
-            case _:
-                users[id].day = call.data
-                users[id].day_set = True
-                bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+        if users[id].day_set:
+            bot.send_message(call.message.from_user.id, f'Выбран день: {users[id].day}')
+        if not users[id].grade_set:
+            if users[id].grade == '-':
+                match  call.data:
+                    case '7':
+                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
+                        users[id].grade = call.data
+                    case '8':
+                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                        users[id].grade = call.data
+                    case '9':
+                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                        users[id].grade = call.data
+                    case '10':
+                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                        users[id].grade = call.data
+                    case '11':
+                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
+                        users[id].grade = call.data
+                    case _:
+                        bot.send_message(call.message.chat.id, 'Неверный выбор')
+            else:
+                users[id].grade += call.data
+                users[id].grade_set = True
+                bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
+                bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
+        elif not users[id].day_set:
+            match  call.data:
+                case 'Вчера':
+                    users[id].day = time.localtime(time.time()).tm_wday - 1
+                    users[id].day_set = True
+                case 'Сегодня':
+                    users[id].day = time.localtime(time.time()).tm_wday
+                    users[id].day_set = True
+                case 'Завра':
+                    users[id].day = time.localtime(time.time()).tm_wday + 1
+                    users[id].day_set = True
+                case 'other':
+                    bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
+                case 'return':
+                    users[id].grade_set = False
+                    users[id].grade = '-'
+                case _:
+                    users[id].day = call.data
+                    users[id].day_set = True
+                    bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+    else:
+        users[id] = User()
 
 bot.polling(none_stop=True)
