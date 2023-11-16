@@ -45,6 +45,4 @@ for column in range(4, ws.max_column, 2):
     day = {}
     count = 0
 
-for i in timesheet.keys():
-    print(f'{i}: {timesheet[i]}', end='\n')
 
