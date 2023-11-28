@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "docker" ]
+  pull_request:
+    branches: [ "docker" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to GitHub Package Registry
+      run: echo "dckr_pat_xaDAD8lCuSO1ovUOh-VfBaqdEZ0" | docker login docker.io -u "toptyginnn" --password-stdin
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag docker.io/toptyginnn/telebot:$(date +%s)
+    - name: Push the Docker image
+      run: docker push docker.io/toptyginnn/telebot:$(date +%s)
