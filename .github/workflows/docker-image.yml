@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Login to GitHub Package Registry
-        run: echo "dckr_pat_xaDAD8lCuSO1ovUOh-VfBaqdEZ0" | docker login docker.io -u "toptyginnn" --password-stdin
+      run: echo "dckr_pat_xaDAD8lCuSO1ovUOh-VfBaqdEZ0" | docker login docker.io -u "toptyginnn" --password-stdin
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag docker.io/toptyginnn/telebot:$(date +%s)
     - name: Push the Docker image
