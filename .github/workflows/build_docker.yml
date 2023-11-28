@@ -13,10 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3   
     - name: Login to GitHub Package Registry
       run: echo "dckr_pat_xaDAD8lCuSO1ovUOh-VfBaqdEZ0" | docker login docker.io -u "toptyginnn" --password-stdin
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker.io/toptyginnn/telebot:$(date +%s)
-    - name: Push the Docker image
-      run: docker push docker.io/toptyginnn/telebot:$(date +%s)
+    - name: Build and push Docker images
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      with:
+        context: .
+        push: true
+        tags: docker.io/toptyginnn/telebot:$(date +%s)
+        labels: dev
