@@ -30,3 +30,21 @@ jobs:
         tags: |
             toptyginnn/telebot:latest
             toptyginnn/telebot:1.0.0
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+            cd /opt/telebot
+            docker-compose down
+            docker-compose up --force-recreate -d
+            docker image prune -f
