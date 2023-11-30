@@ -18,7 +18,7 @@ class User:
 #Логи
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-f = logging.Formatter('%(asctime)s - %(message)s')
+f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s')
 fh = logging.FileHandler('bot.log')
 fh.setFormatter(f)
 logger.addHandler(fh)
