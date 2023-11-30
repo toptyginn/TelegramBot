@@ -1,8 +1,9 @@
 import telebot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 import time
-
+import tokens
 import Help
+import logging
 
 
 class User:
@@ -14,12 +15,22 @@ class User:
         self.day_set = False
 
 
+#Логи
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+f = logging.Formatter('%(asctime)s - %(message)s')
+fh = logging.FileHandler('bot.log')
+fh.setFormatter(f)
+logger.addHandler(fh)
+
+
 # Инициализация бота:
 users = {}
 id = ''
 days_of_week = ['Понедельник', "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
 # Создание бота
-bot = telebot.TeleBot('6802450385:AAF9ytn2osGDhEQUKIqp4R3bTDjPuSr7HaM')
+bot = telebot.TeleBot(tokens.main_token)
+except_bot = telebot.TeleBot(tokens.except_token)
 
 # Клавиатура
 keyboard_grade = InlineKeyboardMarkup()
@@ -77,6 +88,7 @@ keyboard_days.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
+    logger.info(f'{message.from_user.first_name} has started messaging')
     global id, users
     id = str(message.from_user.id)
     users[id] = User()
@@ -90,6 +102,7 @@ def handle_start(message):
 
 @bot.message_handler(commands=['help'])
 def handle_help(message):
+    logger.info(f'{message.from_user.first_name} needs help')
     bot.send_message(message.chat.id, 'Инструкция: Бот находится на ранней стадии разработки так что писать ему не'
                                       ' очень удобно чтобы снова написать боту снова используйте команду и заполните'
                                       ' класс и день')
@@ -101,6 +114,7 @@ def handle_help(message):
 
 @bot.message_handler(commands=['timesheet'])
 def timesheet(message):
+    logger.info(f'{message.from_user.first_name} ask for timesheet')
     global id, users
     id = str(message.from_user.id)
     users[id] = User()
@@ -109,11 +123,13 @@ def timesheet(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(call):
+    logger.warning(f'bot answered to {call.from_user.first_name}')
     global id, users
     time.sleep(1)
     if not (users[id].grade_set and users[id].day_set):
         if not users[id].grade_set:
             if users[id].grade == '-':
+                logger.info(f'{call.from_user.first_name} from {call.data}th grade')
                 match call.data:
                     case '7':
                         time.sleep(0.5)
@@ -141,6 +157,7 @@ def answer(call):
                 time.sleep(0.5)
                 users[id].grade += call.data
                 users[id].grade_set = True
+                logger.info(f'{call.from_user.first_name} from {users[id].grade} grade')
                 bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
                 bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
         elif not users[id].day_set:
@@ -171,6 +188,7 @@ def answer(call):
                 case _:
                     users[id].day = call.data
                     users[id].day_set = True
+                    logger.info(f'{call.from_user.first_name} want timesheet for {users[id].day}')
                     bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
         if users[id].grade_set and users[id].day_set:
             time.sleep(1.5)
