@@ -20,8 +20,8 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        username: "toptyginnn"
-        password: "dckr_pat_xaDAD8lCuSO1ovUOh-VfBaqdEZ0"      
+        username: ${{ secrets.GH_NAME}}
+        password: ${{ secrets.GH_PASS}}
     - name: Build and push Docker images
       uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
       with:
@@ -41,8 +41,8 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
         script: |
             cd /opt/telebot
             docker-compose down
