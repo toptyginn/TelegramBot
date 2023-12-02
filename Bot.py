@@ -1,8 +1,9 @@
 import telebot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 import time
-
+import tokens
 import Help
+import logging
 
 
 class User:
@@ -14,12 +15,28 @@ class User:
         self.day_set = False
 
 
+#Логи
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s',"%d-%m-%Y %H:%M:%S")
+fh = logging.FileHandler('bot.log')
+fh.setFormatter(f)
+logger.addHandler(fh)
+
+# вывод в консоль
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console.setFormatter(f)
+# add the handler to the root logger
+logging.getLogger().addHandler(console)
+
 # Инициализация бота:
 users = {}
 id = ''
 days_of_week = ['Понедельник', "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
 # Создание бота
-bot = telebot.TeleBot('6802450385:AAF9ytn2osGDhEQUKIqp4R3bTDjPuSr7HaM')
+bot = telebot.TeleBot(tokens.main_token)
+except_bot = telebot.TeleBot(tokens.except_token)
 
 # Клавиатура
 keyboard_grade = InlineKeyboardMarkup()
@@ -77,6 +94,7 @@ keyboard_days.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
+    logger.info(f'{message.from_user.first_name}({message.from_user.id}) has started messaging')
     global id, users
     id = str(message.from_user.id)
     users[id] = User()
@@ -90,6 +108,7 @@ def handle_start(message):
 
 @bot.message_handler(commands=['help'])
 def handle_help(message):
+    logger.info(f'{message.from_user.first_name} needs help')
     bot.send_message(message.chat.id, 'Инструкция: Бот находится на ранней стадии разработки так что писать ему не'
                                       ' очень удобно чтобы снова написать боту снова используйте команду и заполните'
                                       ' класс и день')
@@ -101,6 +120,7 @@ def handle_help(message):
 
 @bot.message_handler(commands=['timesheet'])
 def timesheet(message):
+    logger.info(f'{message.from_user.first_name} ask for timesheet')
     global id, users
     id = str(message.from_user.id)
     users[id] = User()
@@ -109,90 +129,96 @@ def timesheet(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(call):
-    global id, users
-    time.sleep(1)
-    if not (users[id].grade_set and users[id].day_set):
-        if not users[id].grade_set:
-            if users[id].grade == '-':
-                match call.data:
-                    case '7':
-                        time.sleep(0.5)
-                        users[id].grade = call.data
-                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
-                    case '8':
-                        time.sleep(0.5)
-                        users[id].grade = call.data
-                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-                    case '9':
-                        time.sleep(0.5)
-                        users[id].grade = call.data
-                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-                    case '10':
-                        time.sleep(0.5)
-                        users[id].grade = call.data
-                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
-                    case '11':
-                        time.sleep(0.5)
-                        users[id].grade = call.data
-                        bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
-                    case _:
-                        bot.send_message(call.message.chat.id, 'Неверный выбор')
-            else:
-                time.sleep(0.5)
-                users[id].grade += call.data
-                users[id].grade_set = True
-                bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
-                bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
-        elif not users[id].day_set:
-            match call.data:
-                case 'Вчера':
+    try:
+        logger.warning(f'bot answered to {call.from_user.first_name}')
+        global id, users
+        time.sleep(1)
+        if not (users[id].grade_set and users[id].day_set):
+            if not users[id].grade_set:
+                if users[id].grade == '-':
+                    logger.info(f'{call.from_user.first_name} from {call.data}th grade')
+                    match call.data:
+                        case '7':
+                            time.sleep(0.5)
+                            users[id].grade = call.data
+                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
+                        case '8':
+                            time.sleep(0.5)
+                            users[id].grade = call.data
+                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                        case '9':
+                            time.sleep(0.5)
+                            users[id].grade = call.data
+                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                        case '10':
+                            time.sleep(0.5)
+                            users[id].grade = call.data
+                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                        case '11':
+                            time.sleep(0.5)
+                            users[id].grade = call.data
+                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
+                        case _:
+                            bot.send_message(call.message.chat.id, 'Неверный выбор')
+                else:
                     time.sleep(0.5)
-                    users[id].day_set = True
-                    users[id].day = days_of_week[time.localtime(time.time()).tm_wday - 1]
-                    bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
-                case 'Сегодня':
-                    time.sleep(0.5)
-                    users[id].day_set = True
-                    users[id].day = days_of_week[time.localtime(time.time()).tm_wday]
-                    bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
-                case 'Завтра':
-                    time.sleep(0.5)
-                    users[id].day_set = True
-                    users[id].day = days_of_week[time.localtime(time.time()).tm_wday + 1]
-                    bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
-                case 'other':
-                    time.sleep(0.5)
-                    bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
-                case 'return':
-                    time.sleep(0.5)
-                    users[id].grade_set = False
-                    users[id].grade = '-'
+                    users[id].grade += call.data
+                    users[id].grade_set = True
+                    logger.info(f'{call.from_user.first_name} from {users[id].grade} grade')
                     bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
-                case _:
-                    users[id].day = call.data
-                    users[id].day_set = True
-                    bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
-        if users[id].grade_set and users[id].day_set:
-            time.sleep(1.5)
-            answer = ['\n']
-            for i in Help.timesheet[users[id].grade][users[id].day].keys():
-                try:
-                    if len(Help.timesheet[users[id].grade][users[id].day][i]) > 0:
-                        if Help.timesheet[users[id].grade][users[id].day][i][0] == 'Пусто':
-                            answer.append(f'{i}: ---')
+                    bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
+            elif not users[id].day_set:
+                match call.data:
+                    case 'Вчера':
+                        time.sleep(0.5)
+                        users[id].day_set = True
+                        users[id].day = days_of_week[time.localtime(time.time()).tm_wday - 1]
+                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                    case 'Сегодня':
+                        time.sleep(0.5)
+                        users[id].day_set = True
+                        users[id].day = days_of_week[time.localtime(time.time()).tm_wday]
+                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                    case 'Завтра':
+                        time.sleep(0.5)
+                        users[id].day_set = True
+                        users[id].day = days_of_week[time.localtime(time.time()).tm_wday + 1]
+                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                    case 'other':
+                        time.sleep(0.5)
+                        bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
+                    case 'return':
+                        time.sleep(0.5)
+                        users[id].grade_set = False
+                        users[id].grade = '-'
+                        bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
+                    case _:
+                        users[id].day = call.data
+                        users[id].day_set = True
+                        logger.info(f'{call.from_user.first_name} want timesheet for {users[id].day}')
+                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+            if users[id].grade_set and users[id].day_set:
+                time.sleep(1.5)
+                answer = ['\n']
+                for i in Help.timesheet[users[id].grade][users[id].day].keys():
+                    try:
+                        if len(Help.timesheet[users[id].grade][users[id].day][i]) > 0:
+                            if Help.timesheet[users[id].grade][users[id].day][i][0] == 'Пусто':
+                                answer.append(f'{i}: ---')
+                            else:
+                                answer.append(
+                                    f'{i}: {Help.timesheet[users[id].grade][users[id].day][i][0]} {Help.timesheet[users[id].grade][users[id].day][i][-1]}')
                         else:
-                            answer.append(
-                                f'{i}: {Help.timesheet[users[id].grade][users[id].day][i][0]} {Help.timesheet[users[id].grade][users[id].day][i][-1]}')
-                    else:
+                            answer.append(f'{i}: ---')
+                    except IndexError:
                         answer.append(f'{i}: ---')
-                except IndexError:
-                    answer.append(f'{i}: ---')
-            answer = '\n'.join(answer)
-            bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: {answer}')
+                answer = '\n'.join(answer)
+                bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: {answer}')
+    except Exception as E:
+        logger.critical(f'{call.from_user.first_name} crahed the programm')
 
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:
     #     users[id] = User()
-
-
+logger.info('Telebot started')
 bot.polling(none_stop=True)
