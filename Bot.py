@@ -18,11 +18,17 @@ class User:
 #Логи
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s')
+f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s',"%d-%m-%Y %H:%M:%S")
 fh = logging.FileHandler('bot.log')
 fh.setFormatter(f)
 logger.addHandler(fh)
 
+# вывод в консоль
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console.setFormatter(f)
+# add the handler to the root logger
+logging.getLogger().addHandler(console)
 
 # Инициализация бота:
 users = {}
@@ -88,7 +94,7 @@ keyboard_days.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    logger.info(f'{message.from_user.first_name} has started messaging')
+    logger.info(f'{message.from_user.first_name}({message.from_user.id}) has started messaging')
     global id, users
     id = str(message.from_user.id)
     users[id] = User()
@@ -214,6 +220,5 @@ def answer(call):
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:
     #     users[id] = User()
-
-
+logger.info('Telebot started')
 bot.polling(none_stop=True)
