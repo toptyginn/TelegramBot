@@ -132,7 +132,7 @@ def answer(call):
     try:
         logger.warning(f'bot answered to {call.from_user.first_name}')
         global users
-        id = str(call.message.message_id)
+        id = str(call.from_user.id)
         time.sleep(1)
         if not (users[id].grade_set and users[id].day_set):
             if not users[id].grade_set:
