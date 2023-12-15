@@ -121,7 +121,7 @@ def handle_help(message):
 @bot.message_handler(commands=['timesheet'])
 def timesheet(message):
     logger.info(f'{message.from_user.first_name} ask for timesheet')
-    global id, users
+    global users
     id = str(message.from_user.id)
     users[id] = User()
     bot.send_message(message.chat.id, 'Выберите свой класс', reply_markup=keyboard_grade)
@@ -131,7 +131,8 @@ def timesheet(message):
 def answer(call):
     try:
         logger.warning(f'bot answered to {call.from_user.first_name}')
-        global id, users
+        global users
+        id = str(call.from_user.id)
         time.sleep(1)
         if not (users[id].grade_set and users[id].day_set):
             if not users[id].grade_set:

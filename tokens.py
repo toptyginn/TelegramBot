@@ -1,2 +1,2 @@
-main_token = '6802450385:AAF9ytn2osGDhEQUKIqp4R3bTDjPuSr7HaM'
+main_token = '6665149623:AAGu7DvPyfNyRJryK6rZtixcaiPMC12EWpQ'
 except_token = ''
