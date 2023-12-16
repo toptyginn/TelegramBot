@@ -5,6 +5,7 @@ import tokens
 import Help
 import logging
 import os
+import sys
 
 class User:
     def __init__(self):
@@ -215,9 +216,10 @@ def answer(call):
                         answer.append(f'{i}: ---')
                 answer = '\n'.join(answer)
                 bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: {answer}')
-    except Exception as E:
+    except Exception as e:
         logger.critical(f'{call.from_user.first_name} crahed the programm')
-
+        logger.critical(e)
+        sys.exit(1)
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:
     #     users[id] = User()
