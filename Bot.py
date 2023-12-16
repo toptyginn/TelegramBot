@@ -4,7 +4,7 @@ import time
 import tokens
 import Help
 import logging
-
+import os
 
 class User:
     def __init__(self):
@@ -19,7 +19,7 @@ class User:
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s',"%d-%m-%Y %H:%M:%S")
-fh = logging.FileHandler('bot.log')
+fh = logging.FileHandler(os.path.join('logs','bot.log'))
 fh.setFormatter(f)
 logger.addHandler(fh)
 
