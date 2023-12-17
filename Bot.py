@@ -1,5 +1,5 @@
 import telebot
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 import time
 import tokens
 import Help
@@ -40,6 +40,7 @@ bot = telebot.TeleBot(tokens.main_token)
 except_bot = telebot.TeleBot(tokens.except_token)
 
 # Клавиатура
+comands = ReplyKeyboardMarkup()
 keyboard_grade = InlineKeyboardMarkup()
 keyboard_ABC = InlineKeyboardMarkup()
 keyboard_ABCD = InlineKeyboardMarkup()
@@ -48,6 +49,7 @@ keyboard_days = InlineKeyboardMarkup()
 keyboard_now = InlineKeyboardMarkup()
 
 # Инициализация клавиатуры
+comands.add('/help', '/timesheet')
 
 # Номера классов
 keyboard_grade.add(InlineKeyboardButton('7', callback_data='7'))
@@ -100,7 +102,7 @@ def handle_start(message):
     id = str(message.from_user.id)
     users[id] = User()
 
-    bot.send_message(message.chat.id, f'Добро пожаловать {message.from_user.first_name}!')
+    bot.send_message(message.chat.id, f'Добро пожаловать {message.from_user.first_name}!', reply_markup=comands)
     bot.send_message(message.chat.id, 'Доступные команды:')
     bot.send_message(message.chat.id, '/start - Запусить бота')
     bot.send_message(message.chat.id, '/help - Вывод доступных команд')
@@ -132,7 +134,7 @@ def timesheet(message):
 def answer(call):
     try:
         logger.warning(f'bot answered to {call.from_user.first_name}')
-        global users
+        global users, msg
         id = str(call.from_user.id)
         time.sleep(1)
         if not (users[id].grade_set and users[id].day_set):
@@ -143,32 +145,36 @@ def answer(call):
                         case '7':
                             time.sleep(0.5)
                             users[id].grade = call.data
-                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
+                            msg = bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
                         case '8':
                             time.sleep(0.5)
                             users[id].grade = call.data
-                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                            msg = bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
                         case '9':
                             time.sleep(0.5)
                             users[id].grade = call.data
-                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                            msg = bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
                         case '10':
                             time.sleep(0.5)
                             users[id].grade = call.data
-                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                            msg = bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
                         case '11':
                             time.sleep(0.5)
                             users[id].grade = call.data
-                            bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
+                            msg = bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
                         case _:
-                            bot.send_message(call.message.chat.id, 'Неверный выбор')
+                            msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
                 else:
                     time.sleep(0.5)
-                    users[id].grade += call.data
-                    users[id].grade_set = True
-                    logger.info(f'{call.from_user.first_name} from {users[id].grade} grade')
-                    bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
-                    bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
+                    if call.data == 'return':
+                        bot.delete_message(call.message.chat.id, call.message.id)
+                        users[id].grade = '-'
+                    else:
+                        users[id].grade += call.data
+                        users[id].grade_set = True
+                        logger.info(f'{call.from_user.first_name} from {users[id].grade} grade')
+                        bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
+                        msg = bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
             elif not users[id].day_set:
                 match call.data:
                     case 'Вчера':
@@ -188,12 +194,28 @@ def answer(call):
                         bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
                     case 'other':
                         time.sleep(0.5)
-                        bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
+                        msg = bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
                     case 'return':
                         time.sleep(0.5)
+                        bot.delete_message(call.message.chat.id, call.message.id)
                         users[id].grade_set = False
-                        users[id].grade = '-'
-                        bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
+                        users[id].grade = users[id].grade[0: -1]
+                        match users[id].grade:
+                            case '7':
+                                time.sleep(0.5)
+                                bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABC)
+                            case '8':
+                                time.sleep(0.5)
+                                bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                            case '9':
+                                time.sleep(0.5)
+                                bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                            case '10':
+                                time.sleep(0.5)
+                                bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_ABCD)
+                            case '11':
+                                time.sleep(0.5)
+                                bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
                     case _:
                         users[id].day = call.data
                         users[id].day_set = True
@@ -217,7 +239,7 @@ def answer(call):
                 answer = '\n'.join(answer)
                 bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: {answer}')
     except Exception as E:
-        logger.critical(f'{call.from_user.first_name} crahed the programm')
+        logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
 
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:
