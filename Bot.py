@@ -1,3 +1,5 @@
+import random
+
 import telebot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 import time
@@ -16,11 +18,11 @@ class User:
         self.day_set = False
 
 
-#Логи
+# Логи
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s',"%d-%m-%Y %H:%M:%S")
-fh = logging.FileHandler(os.path.join('logs','bot.log'))
+f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s', "%d-%m-%Y %H:%M:%S")
+fh = logging.FileHandler(os.path.join('logs', 'bot.log'))
 fh.setFormatter(f)
 logger.addHandler(fh)
 
@@ -30,6 +32,17 @@ console.setLevel(logging.INFO)
 console.setFormatter(f)
 # add the handler to the root logger
 logging.getLogger().addHandler(console)
+
+# Emoji
+counts_emoji = {'1': '\U00000031', '2': '\U00000032', '3': '\U00000033', '4': '\U00000034', '5': '\U00000035',
+                '6': '\U00000036', '7': '\U00000037', '8': '\U00000038'}
+
+days_emoji = {'Понедельник': ['\U0001F971', '\U0001F644', '\U0001F611', '\U0001F643', '\U0001F97A'],
+              'Вторник': ['\U0001F9E0', '\U0001F978', '\U0001F913', '\U0001F9D0', '\U0001F575'],
+              'Среда': ['\U0001F975', '\U0001FAE0', '\U0001F928', '\U00002764', '\U0001F979'],
+              'Четверг': ['\U0001F642', '\U0001F970', '\U0001F61C', '\U0001F917', '\U0001F60A'],
+              'Пятница': ['\U0001F389', '\U0001F386', '\U0001F525', '\U00002660', '\U0001F451'],
+              'Суббота': ['\U0001F680', '\U0001F355', '\U0001F496', '\U0001F92F', '\U0001F60E']}
 
 # Инициализация бота:
 users = {}
@@ -178,20 +191,29 @@ def answer(call):
             elif not users[id].day_set:
                 match call.data:
                     case 'Вчера':
-                        time.sleep(0.5)
-                        users[id].day_set = True
-                        users[id].day = days_of_week[time.localtime(time.time()).tm_wday - 1]
-                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        if time.localtime(time.time()).tm_wday - 1 != 6:
+                            time.sleep(0.5)
+                            users[id].day_set = True
+                            users[id].day = days_of_week[time.localtime(time.time()).tm_wday - 1]
+                            bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        else:
+                            msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
                     case 'Сегодня':
-                        time.sleep(0.5)
-                        users[id].day_set = True
-                        users[id].day = days_of_week[time.localtime(time.time()).tm_wday]
-                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        if time.localtime(time.time()).tm_wday != 6:
+                            time.sleep(0.5)
+                            users[id].day_set = True
+                            users[id].day = days_of_week[time.localtime(time.time()).tm_wday]
+                            bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        else:
+                            msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
                     case 'Завтра':
-                        time.sleep(0.5)
-                        users[id].day_set = True
-                        users[id].day = days_of_week[time.localtime(time.time()).tm_wday + 1]
-                        bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        if time.localtime(time.time()).tm_wday + 1 != 6:
+                            time.sleep(0.5)
+                            users[id].day_set = True
+                            users[id].day = days_of_week[time.localtime(time.time()).tm_wday + 1]
+                            bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        else:
+                            msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
                     case 'other':
                         time.sleep(0.5)
                         msg = bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_days)
@@ -228,21 +250,25 @@ def answer(call):
                     try:
                         if len(Help.timesheet[users[id].grade][users[id].day][i]) > 0:
                             if Help.timesheet[users[id].grade][users[id].day][i][0] == 'Пусто':
-                                answer.append(f'{i}: ---')
+                                answer.append(f'{counts_emoji[str(i)]}: ---')
                             else:
                                 answer.append(
-                                    f'{i}: {Help.timesheet[users[id].grade][users[id].day][i][0]} {Help.timesheet[users[id].grade][users[id].day][i][-1]}')
+                                    f'{counts_emoji[str(i)]}: {Help.timesheet[users[id].grade][users[id].day][i][0]} '
+                                    f'{Help.timesheet[users[id].grade][users[id].day][i][-1]}')
                         else:
-                            answer.append(f'{i}: ---')
+                            answer.append(f'{counts_emoji[str(i)]}: ---')
                     except IndexError:
-                        answer.append(f'{i}: ---')
+                        answer.append(f'{counts_emoji[str(i)]}: ---')
                 answer = '\n'.join(answer)
-                bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: {answer}')
+                bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: '
+                                                       f'{random.choice(days_emoji[users[id].day])} {random.choice(days_emoji[users[id].day])} {answer}')
     except Exception as E:
         logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
 
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:
     #     users[id] = User()
+
+
 logger.info('Telebot started')
 bot.polling(none_stop=True)
