@@ -260,8 +260,11 @@ def answer(call):
                     except IndexError:
                         answer.append(f'{counts_emoji[str(i)]}: ---')
                 answer = '\n'.join(answer)
-                bot.send_message(call.message.chat.id, f'Расписание на {users[id].day}: '
-                                                       f'{random.choice(days_emoji[users[id].day])} {random.choice(days_emoji[users[id].day])} {answer}')
+                bot.send_message(call.message.chat.id, f'{random.choice(days_emoji[users[id].day])} '
+                                                       f'{random.choice(days_emoji[users[id].day])} '
+                                                       f'Расписание на {users[id].day}: '
+                                                       f'{random.choice(days_emoji[users[id].day])} '
+                                                       f'{random.choice(days_emoji[users[id].day])} {answer}')
     except Exception as E:
         logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
 
