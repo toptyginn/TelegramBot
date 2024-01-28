@@ -7,7 +7,7 @@ import tokens
 import Help
 import logging
 import os
-
+import sys
 
 class User:
     def __init__(self):
@@ -21,8 +21,10 @@ class User:
 # Логи
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
 f = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s', "%d-%m-%Y %H:%M:%S")
 fh = logging.FileHandler(os.path.join('logs', 'bot.log'))
+
 fh.setFormatter(f)
 logger.addHandler(fh)
 
@@ -293,6 +295,9 @@ def answer(call):
                                                        f'{random.choice(days_emoji[users[id].day])} {answer}')
     except Exception as E:
         logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
+        logger.critical(f'{call.from_user.first_name} crahed the programm')
+        logger.critical(e)
+        sys.exit(1)
 
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:

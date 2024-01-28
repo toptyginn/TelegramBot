@@ -1,0 +1,50 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "docker" ]
+  pull_request:
+    branches: [ "docker" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3         
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.GH_NAME}}
+        password: ${{ secrets.GH_PASS}}
+    - name: Build and push Docker images
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      with:
+        context: .
+        push: true
+        tags: |
+            toptyginnn/telebot:latest
+            toptyginnn/telebot:1.0.0
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: 'nikonoff'
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+            cd /opt/telebot
+            docker-compose down
+            docker-compose up --force-recreate -d
+            docker image prune -f
