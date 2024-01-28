@@ -279,8 +279,8 @@ def answer(call):
                                 answer.append(f'{counts_emoji[str(i)]}: ---')
                             else:
                                 answer.append(
-                                    f'{counts_emoji[str(i)]}: {Help.timesheet[users[id].grade][users[id].day][i][0]} '
-                                    f'{Help.timesheet[users[id].grade][users[id].day][i][-1]}')
+                                    f'{counts_emoji[str(i)]}: {timesheet[users[id].grade][users[id].day][i][0]} '
+                                    f'{timesheet[users[id].grade][users[id].day][i][-1]}')
                         else:
                             answer.append(f'{counts_emoji[str(i)]}: ---')
                     except IndexError:
