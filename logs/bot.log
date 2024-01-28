@@ -1,97 +1,25 @@
-INFO - 2023-12-02 13:20:45,572 - РњРёС…Р°РёР» has started messaging
-INFO - 2023-12-02 13:44:42,841 - РњРёС…Р°РёР»(477598373) has started messaging
-INFO - 2023-12-02 13:44:42,841 - РњРёС…Р°РёР»(477598373) has started messaging
+INFO - 2023-12-02 13:20:45,572 - ГђЕ“ГђВёГ‘вЂ¦ГђВ°ГђВёГђВ» has started messaging
+INFO - 2023-12-02 13:44:42,841 - ГђЕ“ГђВёГ‘вЂ¦ГђВ°ГђВёГђВ»(477598373) has started messaging
+INFO - 2023-12-02 13:44:42,841 - ГђЕ“ГђВёГ‘вЂ¦ГђВ°ГђВёГђВ»(477598373) has started messaging
 INFO - 2023-12-02 13:46:37,798 - Telebot started
-INFO - 2023-12-02 13:46:44,994 - РњРёС…Р°РёР»(477598373) has started messaging
+INFO - 2023-12-02 13:46:44,994 - ГђЕ“ГђВёГ‘вЂ¦ГђВ°ГђВёГђВ»(477598373) has started messaging
 INFO - 2023-12-02 13:50:16 - Telebot started
 02-12-2023 13:51:40 - INFO - Telebot started
 INFO - 02-12-2023 20:14:26 - Telebot started
-INFO - 02-12-2023 20:14:36 - Саня ask for timesheet
-WARNING - 02-12-2023 20:14:38 - bot answered to Саня
-INFO - 02-12-2023 20:14:39 - Саня from 10th grade
-WARNING - 02-12-2023 20:14:41 - bot answered to Саня
-INFO - 02-12-2023 20:14:42 - Саня from 10А grade
-WARNING - 02-12-2023 20:14:45 - bot answered to Саня
+INFO - 02-12-2023 20:14:36 - Г‘Г Г­Гї ask for timesheet
+WARNING - 02-12-2023 20:14:38 - bot answered to Г‘Г Г­Гї
+INFO - 02-12-2023 20:14:39 - Г‘Г Г­Гї from 10th grade
+WARNING - 02-12-2023 20:14:41 - bot answered to Г‘Г Г­Гї
+INFO - 02-12-2023 20:14:42 - Г‘Г Г­Гї from 10ГЂ grade
+WARNING - 02-12-2023 20:14:45 - bot answered to Г‘Г Г­Гї
 INFO - 14-12-2023 18:52:14 - Telebot started
-INFO - 14-12-2023 18:52:15 - Саня ask for timesheet
-WARNING - 14-12-2023 18:52:19 - bot answered to Саня
-INFO - 14-12-2023 18:52:20 - Саня from 10th grade
-WARNING - 14-12-2023 18:52:22 - bot answered to Саня
-INFO - 14-12-2023 18:52:23 - Саня from 10А grade
-WARNING - 14-12-2023 18:52:29 - bot answered to Саня
-WARNING - 14-12-2023 18:52:39 - bot answered to Саня
-WARNING - 14-12-2023 18:52:46 - bot answered to Саня
-WARNING - 14-12-2023 18:53:36 - bot answered to Саня
-INFO - 07-01-2024 15:50:04 - Telebot started
-INFO - 07-01-2024 15:50:58 - Саня ask for timesheet
-WARNING - 07-01-2024 15:51:00 - bot answered to Саня
-INFO - 07-01-2024 15:51:01 - Саня from 10th grade
-WARNING - 07-01-2024 15:51:04 - bot answered to Саня
-INFO - 07-01-2024 15:51:05 - Саня from 10А grade
-WARNING - 07-01-2024 15:51:09 - bot answered to Саня
-CRITICAL - 07-01-2024 15:51:10 - Саня crahed the programm by list index out of range
-WARNING - 07-01-2024 15:51:25 - bot answered to Саня
-WARNING - 07-01-2024 15:51:33 - bot answered to Саня
-INFO - 07-01-2024 16:00:29 - Telebot started
-INFO - 07-01-2024 16:01:41 - Саня ask for timesheet
-WARNING - 07-01-2024 16:01:45 - bot answered to Саня
-INFO - 07-01-2024 16:01:46 - Саня from 10th grade
-WARNING - 07-01-2024 16:01:49 - bot answered to Саня
-INFO - 07-01-2024 16:01:50 - Саня from 10А grade
-WARNING - 07-01-2024 16:02:01 - bot answered to Саня
-WARNING - 07-01-2024 16:02:05 - bot answered to Саня
-INFO - 07-01-2024 16:02:06 - Саня want timesheet for Понедельник
-CRITICAL - 07-01-2024 16:02:08 - Саня crahed the programm by 'Классный час'
-WARNING - 07-01-2024 16:06:32 - bot answered to Саня
-WARNING - 07-01-2024 16:06:37 - bot answered to Саня
-INFO - 07-01-2024 16:07:13 - Telebot started
-INFO - 07-01-2024 16:07:38 - Саня ask for timesheet
-WARNING - 07-01-2024 16:07:46 - bot answered to Саня
-INFO - 07-01-2024 16:07:47 - Саня from 10th grade
-WARNING - 07-01-2024 16:07:54 - bot answered to Саня
-INFO - 07-01-2024 16:07:55 - Саня from 10А grade
-WARNING - 07-01-2024 16:08:00 - bot answered to Саня
-WARNING - 07-01-2024 16:08:04 - bot answered to Саня
-INFO - 07-01-2024 16:08:05 - Саня want timesheet for Пятница
-CRITICAL - 07-01-2024 16:08:07 - Саня crahed the programm by 'Литература'
-INFO - 07-01-2024 16:17:40 - Telebot started
-INFO - 07-01-2024 16:29:09 - Саня ask for timesheet
-WARNING - 07-01-2024 16:29:11 - bot answered to Саня
-INFO - 07-01-2024 16:29:12 - Саня from 10th grade
-WARNING - 07-01-2024 16:29:14 - bot answered to Саня
-INFO - 07-01-2024 16:29:16 - Саня from 10А grade
-WARNING - 07-01-2024 16:29:19 - bot answered to Саня
-WARNING - 07-01-2024 16:29:22 - bot answered to Саня
-INFO - 07-01-2024 16:29:23 - Саня want timesheet for Четверг
-INFO - 07-01-2024 16:32:13 - Telebot started
-WARNING - 07-01-2024 16:34:02 - bot answered to Саня
-CRITICAL - 07-01-2024 16:34:03 - Саня crahed the programm by '1807915254'
-INFO - 07-01-2024 16:34:10 - Саня ask for timesheet
-WARNING - 07-01-2024 16:34:12 - bot answered to Саня
-INFO - 07-01-2024 16:34:13 - Саня from 10th grade
-WARNING - 07-01-2024 16:34:15 - bot answered to Саня
-INFO - 07-01-2024 16:34:17 - Саня from 10А grade
-WARNING - 07-01-2024 16:34:21 - bot answered to Саня
-CRITICAL - 07-01-2024 16:34:22 - Саня crahed the programm by 'float' object has no attribute 'tm_wday'
-INFO - 07-01-2024 16:37:36 - Telebot started
-INFO - 07-01-2024 16:38:10 - Саня ask for timesheet
-WARNING - 07-01-2024 16:38:13 - bot answered to Саня
-INFO - 07-01-2024 16:38:14 - Саня from 10th grade
-WARNING - 07-01-2024 16:38:16 - bot answered to Саня
-INFO - 07-01-2024 16:38:17 - Саня from 10А grade
-WARNING - 07-01-2024 16:38:19 - bot answered to Саня
-WARNING - 07-01-2024 16:38:22 - bot answered to Саня
-INFO - 07-01-2024 16:38:23 - Саня want timesheet for Пятница
-INFO - 08-01-2024 14:39:50 - Telebot started
-INFO - 08-01-2024 14:40:33 - Саня ask for timesheet
-WARNING - 08-01-2024 14:40:35 - bot answered to Саня
-INFO - 08-01-2024 14:40:36 - Саня from 10th grade
-WARNING - 08-01-2024 14:40:38 - bot answered to Саня
-INFO - 08-01-2024 14:40:40 - Саня from 10А grade
-WARNING - 08-01-2024 14:40:44 - bot answered to Саня
-INFO - 08-01-2024 14:41:28 - Саня ask for timesheet
-WARNING - 08-01-2024 14:41:32 - bot answered to Саня
-INFO - 08-01-2024 14:41:33 - Саня from 10th grade
-WARNING - 08-01-2024 14:41:35 - bot answered to Саня
-INFO - 08-01-2024 14:41:36 - Саня from 10А grade
-WARNING - 08-01-2024 14:41:40 - bot answered to Саня
+INFO - 14-12-2023 18:52:15 - Г‘Г Г­Гї ask for timesheet
+WARNING - 14-12-2023 18:52:19 - bot answered to Г‘Г Г­Гї
+INFO - 14-12-2023 18:52:20 - Г‘Г Г­Гї from 10th grade
+WARNING - 14-12-2023 18:52:22 - bot answered to Г‘Г Г­Гї
+INFO - 14-12-2023 18:52:23 - Г‘Г Г­Гї from 10ГЂ grade
+WARNING - 14-12-2023 18:52:29 - bot answered to Г‘Г Г­Гї
+WARNING - 14-12-2023 18:52:39 - bot answered to Г‘Г Г­Гї
+WARNING - 14-12-2023 18:52:46 - bot answered to Г‘Г Г­Гї
+WARNING - 14-12-2023 18:53:36 - bot answered to Г‘Г Г­Гї
+
