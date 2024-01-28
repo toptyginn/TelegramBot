@@ -274,15 +274,15 @@ def answer(call):
             if users[id].grade_set and users[id].day_set:
                 time.sleep(1.5)
                 answer = ['\n']
-                for i in Help.timesheet[users[id].grade][users[id].day].keys():
+                for i in timesheet[users[id].grade][users[id].day].keys():
                     try:
-                        if len(Help.timesheet[users[id].grade][users[id].day][i]) > 0:
-                            if Help.timesheet[users[id].grade][users[id].day][i][0] == 'Пусто':
+                        if len(timesheet[users[id].grade][users[id].day][i]) > 0:
+                            if timesheet[users[id].grade][users[id].day][i][0] == 'Пусто':
                                 answer.append(f'{counts_emoji[str(i)]}: ---')
                             else:
                                 answer.append(
-                                    f'{counts_emoji[str(i)]}: {Help.timesheet[users[id].grade][users[id].day][i][0]} '
-                                    f'{Help.timesheet[users[id].grade][users[id].day][i][-1]}')
+                                    f'{counts_emoji[str(i)]}: {timesheet[users[id].grade][users[id].day][i][0]} '
+                                    f'{timesheet[users[id].grade][users[id].day][i][-1]}')
                         else:
                             answer.append(f'{counts_emoji[str(i)]}: ---')
                     except IndexError:
@@ -296,7 +296,7 @@ def answer(call):
     except Exception as E:
         logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
         logger.critical(f'{call.from_user.first_name} crahed the programm')
-        logger.critical(e)
+        logger.critical(E)
         sys.exit(1)
 
         # print(Help.timesheet[users[id].grade][users[id].day])
