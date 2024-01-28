@@ -46,8 +46,11 @@ def make_class():
 def make_timesheet():
     lessons = []
     for i in Help.timesheet:
-        for k in i:
-            lessons.append(k)
+        try:
+            for k in i:
+                    lessons.append(k)
+        except Exception:
+            continue
 
     for i in lessons:
         lesson1 = 'UPDATE timesheet set thing = (SELECT id FROM classes id WHERE thing = ?)\

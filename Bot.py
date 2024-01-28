@@ -26,6 +26,9 @@ fh = logging.FileHandler(os.path.join('logs', 'bot.log'))
 fh.setFormatter(f)
 logger.addHandler(fh)
 
+#Расписание
+timesheet = Help.parsing_timesheet('Расписание УРОКОВ с 11.09.2023-ПРАВКА1.xlsx')
+
 # вывод в консоль
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
@@ -141,6 +144,29 @@ def timesheet(message):
     id = str(message.from_user.id)
     users[id] = User()
     bot.send_message(message.chat.id, 'Выберите свой класс', reply_markup=keyboard_grade)
+
+@bot.message_handler(commands=['change'])
+def change_it(comand):
+    if comand.from_user.id == str(1807915254):
+        @bot.message_handler(content_types=['document'])
+        def handle_docs_photo(message):
+            global timesheet
+            try:
+                chat_id = message.chat.id
+
+                file_info = bot.get_file(message.document.file_id)
+                downloaded_file = bot.download_file(os.path.join(file_info.file_path))
+
+                src = message.document.file_name
+                timesheet = Help.parsing_timesheet(src)
+
+                bot.reply_to(message, "Пожалуй, я сохраню это")
+            except Exception as e:
+                bot.send_message(message.chat.id, f'{e}')
+    else:
+        bot.send_message(comand.chat.id, 'Доступ запрещён')
+
+
 
 
 @bot.callback_query_handler(func=lambda call: True)
