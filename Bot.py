@@ -29,7 +29,7 @@ fh.setFormatter(f)
 logger.addHandler(fh)
 
 #Расписание
-timesheet = Help.parsing_timesheet('Расписание УРОКОВ с 11.09.2023-ПРАВКА1.xlsx')
+schedule = Help.parsing_timesheet("Расписание УРОКОВ с 11.09.2023-ПРАВКА1.xlsx")
 
 # вывод в консоль
 console = logging.StreamHandler()
@@ -152,7 +152,7 @@ def change_it(comand):
     if comand.from_user.id == str(1807915254):
         @bot.message_handler(content_types=['document'])
         def handle_docs_photo(message):
-            global timesheet
+            global schedule
             try:
                 chat_id = message.chat.id
 
@@ -160,7 +160,7 @@ def change_it(comand):
                 downloaded_file = bot.download_file(os.path.join(file_info.file_path))
 
                 src = message.document.file_name
-                timesheet = Help.parsing_timesheet(src)
+                schedule = Help.parsing_timesheet(src)
 
                 bot.reply_to(message, "Пожалуй, я сохраню это")
             except Exception as e:
@@ -274,15 +274,15 @@ def answer(call):
             if users[id].grade_set and users[id].day_set:
                 time.sleep(1.5)
                 answer = ['\n']
-                for i in timesheet[users[id].grade][users[id].day].keys():
+                for i in schedule[users[id].grade][users[id].day].keys():
                     try:
-                        if len(timesheet[users[id].grade][users[id].day][i]) > 0:
-                            if timesheet[users[id].grade][users[id].day][i][0] == 'Пусто':
+                        if len(schedule[users[id].grade][users[id].day][i]) > 0:
+                            if schedule[users[id].grade][users[id].day][i][0] == 'Пусто':
                                 answer.append(f'{counts_emoji[str(i)]}: ---')
                             else:
                                 answer.append(
-                                    f'{counts_emoji[str(i)]}: {timesheet[users[id].grade][users[id].day][i][0]} '
-                                    f'{timesheet[users[id].grade][users[id].day][i][-1]}')
+                                    f'{counts_emoji[str(i)]}: {schedule[users[id].grade][users[id].day][i][0]} '
+                                    f'{schedule[users[id].grade][users[id].day][i][-1]}')
                         else:
                             answer.append(f'{counts_emoji[str(i)]}: ---')
                     except IndexError:
