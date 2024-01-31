@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "docker" ]
 
+env:
+  BUILD-NUMBER: ${{github.run_number}}
+
 jobs:
 
   build:
@@ -28,11 +31,10 @@ jobs:
         context: .
         push: true
         tags: |
-            toptyginnn/telebot:latest
-            toptyginnn/telebot:1.0.0
+            toptyginnn/telebot:1.0.${{ github.run_number }}
 
   deploy:
-
+        
     runs-on: ubuntu-latest
     needs: [build]
     steps:
