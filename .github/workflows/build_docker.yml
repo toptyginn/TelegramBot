@@ -49,4 +49,3 @@ jobs:
             cd /opt/telebot
             docker-compose down
             docker-compose up --force-recreate -d
-            docker image prune -f
