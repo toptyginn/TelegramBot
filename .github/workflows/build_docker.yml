@@ -38,8 +38,6 @@ jobs:
     needs: [build]
     steps:
     - name: executing remote ssh commands using password
-      env:
-        BUILD_NUMBER: ${{github.run_number}} 
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
@@ -47,7 +45,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
-            echo "Deploing build ${BUILD_NUMBER}"
+            echo "Deploing build ${{ github.run_numbe }}"
+            export BUILD_NUMBER=${{ github.run_number }}
             cd /opt/telebot
             docker-compose down
             docker-compose up --force-recreate -d
