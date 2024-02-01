@@ -47,6 +47,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
+            echo "Deploing build ${BUILD_NUMBER}"
             cd /opt/telebot
             docker-compose down
             docker-compose up --force-recreate -d
