@@ -149,26 +149,24 @@ def timesheet(message):
 
 @bot.message_handler(commands=['change'])
 def change_it(comand):
-    if comand.from_user.id == str(1807915254):
+    if str(comand.from_user.id) == str(1807915254):
         @bot.message_handler(content_types=['document'])
         def handle_docs_photo(message):
             global schedule
             try:
-                chat_id = message.chat.id
-
+                file_name = message.document.file_name
                 file_info = bot.get_file(message.document.file_id)
-                downloaded_file = bot.download_file(os.path.join(file_info.file_path))
+                downloaded_file = bot.download_file(file_info.file_path)
+                with open(file_name, 'wb') as new_file:
+                    new_file.write(downloaded_file)
 
-                src = message.document.file_name
-                schedule = Help.parsing_timesheet(src)
+                schedule = Help.parsing_timesheet(file_name)
 
                 bot.reply_to(message, "Пожалуй, я сохраню это")
             except Exception as e:
                 bot.send_message(message.chat.id, f'{e}')
     else:
         bot.send_message(comand.chat.id, 'Доступ запрещён')
-
-
 
 
 @bot.callback_query_handler(func=lambda call: True)
