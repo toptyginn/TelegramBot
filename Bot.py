@@ -130,9 +130,7 @@ def handle_start(message):
 @bot.message_handler(commands=['help'])
 def handle_help(message):
     logger.info(f'{message.from_user.first_name} needs help')
-    bot.send_message(message.chat.id, 'Инструкция: Бот находится на ранней стадии разработки так что писать ему не'
-                                      ' очень удобно чтобы снова написать боту снова используйте команду и заполните'
-                                      ' класс и день')
+    bot.send_message(message.chat.id, 'По всем вопросам связанным с ботом пишите: https://t.me/Nick_OnOff')
     bot.send_message(message.chat.id, 'Доступные команды:')
     bot.send_message(message.chat.id, '/start - Запусить бота')
     bot.send_message(message.chat.id, '/help - Вывод доступных команд')
@@ -203,6 +201,7 @@ def answer(call):
                             msg = bot.send_message(call.message.chat.id, 'Выберите букву', reply_markup=keyboard_AB)
                         case _:
                             msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
+                    bot.delete_message(call.message.chat.id, call.message.id)
                 else:
                     time.sleep(0.5)
                     if call.data == 'return':
@@ -213,6 +212,7 @@ def answer(call):
                         users[id].grade_set = True
                         logger.info(f'{call.from_user.first_name} from {users[id].grade} grade')
                         bot.send_message(call.message.chat.id, f'Выбран класс: {users[id].grade}')
+                        bot.delete_message(call.message.chat.id, call.message.id)
                         msg = bot.send_message(call.message.chat.id, 'Выберите день', reply_markup=keyboard_now)
             elif not users[id].day_set:
                 match call.data:
@@ -248,6 +248,7 @@ def answer(call):
                         bot.delete_message(call.message.chat.id, call.message.id)
                         users[id].grade_set = False
                         users[id].grade = users[id].grade[0: -1]
+                        bot.delete_message(call.message.chat.id, call.message.id)
                         match users[id].grade:
                             case '7':
                                 time.sleep(0.5)
@@ -269,6 +270,8 @@ def answer(call):
                         users[id].day_set = True
                         logger.info(f'{call.from_user.first_name} want timesheet for {users[id].day}')
                         bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        bot.delete_message(call.message.chat.id, call.message.id)
+                bot.delete_message(call.message.chat.id, call.message.id)
             if users[id].grade_set and users[id].day_set:
                 time.sleep(1.5)
                 answer = ['\n']
@@ -292,10 +295,8 @@ def answer(call):
                                                        f'{random.choice(days_emoji[users[id].day])} '
                                                        f'{random.choice(days_emoji[users[id].day])} {answer}')
     except Exception as E:
+        bot.send_message(1807915254, f'{call.from_user.first_name} crahed the programm by {E}')
         logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
-        logger.critical(f'{call.from_user.first_name} crahed the programm')
-        logger.critical(E)
-        sys.exit(1)
 
         # print(Help.timesheet[users[id].grade][users[id].day])
     # else:
