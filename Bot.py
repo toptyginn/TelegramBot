@@ -270,7 +270,6 @@ def answer(call):
                         users[id].day_set = True
                         logger.info(f'{call.from_user.first_name} want timesheet for {users[id].day}')
                         bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
-                        bot.delete_message(call.message.chat.id, call.message.id)
                 bot.delete_message(call.message.chat.id, call.message.id)
             if users[id].grade_set and users[id].day_set:
                 time.sleep(1.5)
@@ -295,7 +294,12 @@ def answer(call):
                                                        f'{random.choice(days_emoji[users[id].day])} '
                                                        f'{random.choice(days_emoji[users[id].day])} {answer}')
     except Exception as E:
-        bot.send_message(1807915254, f'{call.from_user.first_name} crahed the programm by {E}')
+        try:
+            bot.send_message(1807915254, f'{call.from_user.first_name} ({call.from_user.id},'
+                                         f' https://t.me/{call.from_user.username}) crahed the programm by {E}')
+        except Exception as Error:
+            bot.send_message(1807915254,
+                             f'{call.from_user.first_name} ({call.from_user.id})crahed the programm by {Error}')
         logger.critical(f'{call.from_user.first_name} crahed the programm by {E}')
 
         # print(Help.timesheet[users[id].grade][users[id].day])
