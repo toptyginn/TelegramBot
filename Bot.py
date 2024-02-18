@@ -233,10 +233,15 @@ def answer(call):
                         else:
                             msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
                     case 'Завтра':
-                        if time.localtime(time.time()).tm_wday + 1 != 6:
+                        if time.localtime(time.time()).tm_wday + 1 < 6:
                             time.sleep(0.5)
                             users[id].day_set = True
                             users[id].day = days_of_week[time.localtime(time.time()).tm_wday + 1]
+                            bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
+                        elif time.localtime(time.time()).tm_wday + 1 == 7:
+                            time.sleep(0.5)
+                            users[id].day_set = True
+                            users[id].day = days_of_week[(time.localtime(time.time()).tm_wday + 1) % 6 - 1]
                             bot.send_message(call.message.chat.id, f'Выбран день: {users[id].day}')
                         else:
                             msg = bot.send_message(call.message.chat.id, 'Неверный выбор')
