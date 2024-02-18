@@ -4,9 +4,7 @@ from openpyxl import load_workbook
 
 
 def parsing_timesheet(filename):
-    # грузим книгу
     wb = load_workbook(os.path.join(filename), read_only=True)
-    # выбираем лист
     ws = wb['Лист1']
     translate = {"Кл час": 'Классный час', 'АЛГ': 'Алгебра', 'АНГяз': 'Английский язык', 'ЛИТ': 'Литература',
                  'ФИЗ': 'Физика', 'ИНФ': 'Информатика', 'РУС': 'Русский язык', 'МУЗ': 'Музыка', 'ИСТ': 'История',
@@ -23,7 +21,6 @@ def parsing_timesheet(filename):
     timesheet = {}
     day = {}
     lesson = {}
-    # осальные сроки
     count = 0
     for column in range(4, ws.max_column, 2):
         for row in range(7, 70):
@@ -48,5 +45,4 @@ def parsing_timesheet(filename):
         day = {}
         count = 0
     return timesheet
-
 
