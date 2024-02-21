@@ -1,4 +1,5 @@
 import random
+import traceback
 
 import telebot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
@@ -8,6 +9,7 @@ import Help
 import logging
 import os
 import sys
+
 
 class User:
     def __init__(self):
@@ -28,7 +30,7 @@ fh = logging.FileHandler(os.path.join('logs', 'bot.log'))
 fh.setFormatter(f)
 logger.addHandler(fh)
 
-#Расписание
+# Расписание
 schedule = Help.parsing_timesheet("Расписание УРОКОВ с 11.09.2023-ПРАВКА1.xlsx")
 
 # вывод в консоль
@@ -112,6 +114,17 @@ keyboard_days.add(InlineKeyboardButton('Назад', callback_data='return'))
 
 
 # Функционал бота
+def telegram_polling():
+    try:
+        bot.polling(none_stop=True, timeout=60)  # constantly get messages from Telegram
+    except:
+        traceback_error_string = traceback.format_exc()
+        bot.send_message(1807915254, "\r\n\r\n" + time.strftime(
+            "%c") + "\r\n<<ERROR polling>>\r\n" + traceback_error_string + "\r\n<<ERROR polling>>")
+        bot.stop_polling()
+        time.sleep(10)
+        telegram_polling()
+
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
@@ -144,6 +157,7 @@ def timesheet(message):
     id = str(message.from_user.id)
     users[id] = User()
     bot.send_message(message.chat.id, 'Выберите свой класс', reply_markup=keyboard_grade)
+
 
 @bot.message_handler(commands=['change'])
 def change_it(comand):
@@ -313,4 +327,5 @@ def answer(call):
 
 
 logger.info('Telebot started')
-bot.polling(none_stop=True)
+if __name__ == '__main__':
+    telegram_polling()
